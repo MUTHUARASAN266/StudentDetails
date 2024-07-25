@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="tile_green">#042026</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#101010</color>
+
+    <color name="colorPrimary">#003B46</color>
+    <color name="colorPrimaryDark">#07575B</color>
+    <color name="colorAccent">#66A5AD</color>
+</resources>
