@@ -6,14 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".LoginScreen">
+    tools:context=".SignUp">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/img_back"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scaleType="fitXY"
-        android:src="@drawable/group_1433"
+        android:src="@drawable/group_1434"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,7 +23,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:scaleType="fitXY"
-        android:src="@drawable/rectangle_13"
+        android:src="@drawable/rectangle_50"
         app:layout_constraintEnd_toEndOf="@id/guideline_end"
         app:layout_constraintStart_toStartOf="@id/guideline_start"
         app:layout_constraintTop_toBottomOf="@+id/guideline_center" />
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp20"
         android:layout_marginBottom="@dimen/dp10"
-        android:text="@string/sign_in"
+        android:text="@string/sign_up"
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/sp30"
@@ -43,7 +43,7 @@
         app:layout_constraintTop_toTopOf="@id/guideline_center" />
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/ed_email"
+        android:id="@+id/ed_username"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp20"
@@ -57,7 +57,22 @@
         app:layout_constraintTop_toBottomOf="@id/text_view3" />
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/ed_password"
+        android:id="@+id/ed_phone_number"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp20"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:hint="@string/prompt_Phone"
+        android:inputType="phone"
+        android:maxLength="10"
+        android:textColor="@color/black"
+        android:textColorHint="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_start"
+        app:layout_constraintTop_toBottomOf="@id/ed_username" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/ed_signup_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp20"
@@ -68,25 +83,27 @@
         android:textColorHint="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="@id/guideline_end"
         app:layout_constraintStart_toStartOf="@id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@id/ed_email" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/text_view4"
+        app:layout_constraintTop_toBottomOf="@id/ed_phone_number" />
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/ed_signup_confirm_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/forgot_password"
-        android:textAlignment="center"
-        android:textColor="@color/colorAccent"
-        android:textSize="@dimen/sp15"
-        app:layout_constraintEnd_toEndOf="@+id/ed_password"
-        app:layout_constraintTop_toBottomOf="@id/ed_password" />
+        android:layout_margin="@dimen/dp20"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:hint="@string/prompt_confirm_password"
+        android:inputType="textPassword"
+        android:textColor="@color/black"
+        android:textColorHint="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_start"
+        app:layout_constraintTop_toBottomOf="@id/ed_signup_password" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_view2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dp10"
-        android:text="@string/don_t_have_an_account"
+        android:text="@string/already_have_an_account"
         android:textAlignment="center"
         android:textColor="@color/colorAccent"
         android:textSize="@dimen/sp20"
@@ -99,7 +116,7 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/dp60"
         android:background="@drawable/btn_background"
-        android:text="@string/log_in"
+        android:text="@string/sign_up"
         android:textColor="@color/white"
         android:textSize="@dimen/sp20"
         app:backgroundTint="@color/colorPrimaryDark"
@@ -113,7 +130,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.40" />
+        app:layout_constraintGuide_percent="0.30" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_start"

@@ -1,10 +1,8 @@
 package com.studentdetails
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.studentdetails.databinding.ActivityLoginScreenBinding
 
 class LoginScreen : AppCompatActivity() {
@@ -13,5 +11,11 @@ class LoginScreen : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.apply {
+            textView2.setOnClickListener {
+                startActivity(Intent(this@LoginScreen,SignUPScreen::class.java))
+            }
+        }
     }
 }

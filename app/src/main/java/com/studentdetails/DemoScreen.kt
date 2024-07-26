@@ -15,7 +15,7 @@ class DemoScreen : AppCompatActivity() {
 
         binding.apply {
             btnLoginScreen.setOnClickListener {
-                startActivity(Intent(this@DemoScreen,LoginScreen::class.java))
+                startActivity(Intent(this@DemoScreen,OnboardingScreen::class.java))
             }
         }
     }
