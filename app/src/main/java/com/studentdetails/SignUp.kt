@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.studentdetails.databinding.FragmentSignUpBinding
 
@@ -25,6 +26,10 @@ class SignUp : Fragment() {
         binding = FragmentSignUpBinding.inflate(inflater, container, false)
 
         binding.apply {
+            textView2.setOnClickListener {
+                findNavController().navigate(R.id.action_signUp_to_signIn)
+            }
+
             btnLogin.setOnClickListener {
                 validation()
             }
