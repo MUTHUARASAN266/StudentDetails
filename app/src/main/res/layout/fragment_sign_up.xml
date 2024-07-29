@@ -112,7 +112,7 @@
         app:layout_constraintStart_toStartOf="@id/guideline_start" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_login"
+        android:id="@+id/btn_sign_up"
         android:layout_width="0dp"
         android:layout_height="@dimen/dp60"
         android:background="@drawable/btn_background"

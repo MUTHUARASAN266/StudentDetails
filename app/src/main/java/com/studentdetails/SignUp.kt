@@ -25,19 +25,23 @@ class SignUp : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentSignUpBinding.inflate(inflater, container, false)
 
+        return binding.root
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         binding.apply {
             textView2.setOnClickListener {
                 findNavController().navigate(R.id.action_signUp_to_signIn)
             }
 
-            btnLogin.setOnClickListener {
+            btnSignUp.setOnClickListener {
                 validation()
             }
         }
-        return binding.root
-
     }
-
     private fun validation() {
         binding.apply {
             val userName = edUsername.text.toString()

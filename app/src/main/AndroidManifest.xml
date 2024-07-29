@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -14,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StudentDetails"
         tools:targetApi="31">
+        <activity
+            android:name=".DashboardScreen"
+            android:exported="false" />
         <activity
             android:name=".OnboardingScreen"
             android:exported="false" />
@@ -32,6 +37,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDy-wtYcRMIV3rPYUkrPtH_7FoyueByrbA"/>
+
     </application>
 
 </manifest>

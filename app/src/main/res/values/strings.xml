@@ -1,16 +1,46 @@
 <resources>
     <string name="app_name">StudentDetails</string>
     <string name="student">Student \nApp...</string>
+    <string name="student_name">Student Name</string>
     <string name="don_t_have_an_account">Don\'t have an account? <font color="#003B46">Sign Up</font></string>
     <string name="already_have_an_account">Already have an account? <font color="#003B46">Signin</font></string>
     <string name="log_in">LOG IN</string>
+    <string name="gender">Gender</string>
+    <string name="dob">DOB</string>
+    <string name="blood">Blood</string>
+    <string name="add_student">Add Student</string>
+    <string name="view_student">View Student</string>
+    <string name="view_student_grade">View Student Grade</string>
+    <string name="map_view">Map View</string>
+    <string name="welcome_txt">Welcome to \n Student Database App</string>
     <string name="prompt_user_name">User Name</string>
     <string name="prompt_Phone">Phone no</string>
     <string name="prompt_confirm_password">password</string>
     <string name="prompt_password">Password</string>
     <string name="sign_in">SIGN IN</string>
     <string name="sign_up">SIGN UP</string>
+    <string name="submit">SUBMIT</string>
     <string name="forgot_password"><u>Forgot Password ?</u></string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ab">AB-</string>
+    <string name="_09_10_2001">09/10/2001</string>
+    <string name="male">Male</string>
+    <string name="father_name">Father\'s Name</string>
+    <string name="schoolName">School Name</string>
+    <string name="mother_name">Mother\'s Name</string>
+    <string name="contact_no">Contact No</string>
+    <string name="parent_contact_no">Parents\'s Contact No</string>
+    <string name="parent_details">Parents Details</string>
+    <string name="residential_details">Residential Details</string>
+    <string name="location">Location</string>
+    <string name="emergency_number">Emergency Contact No</string>
+    <string name="address">Address</string>
+    <string name="city">City</string>
+    <string name="hint_text">Name</string>
+    <string name="state">State</string>
+    <string name="zip">Zip</string>
+    <string name="profile_image">profile_image</string>
+    <string name="btn_image">btn_image</string>
+    <string name="female">Female</string>
 </resources>
