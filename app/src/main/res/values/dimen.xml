@@ -54,6 +54,7 @@
     <dimen name="dp170">170dp</dimen>
     <dimen name="dp180">180dp</dimen>
     <dimen name="dp200">200dp</dimen>
+    <dimen name="dp400">400dp</dimen>
     <dimen name="dp900">900dp</dimen>
 
     <dimen name="margin_very_tiny">@dimen/dp2</dimen>

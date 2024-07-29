@@ -1,4 +1,4 @@
-package com.studentdetails
+package com.studentdetails.repositry
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -8,6 +8,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.studentdetails.model.StudentData
 
 class StudentRepository {
 
@@ -68,15 +69,13 @@ class StudentRepository {
         return itemsLiveData
     }
 
-    fun updateStudent(studentId: Int, studentData: StudentData) {
-        studentRef.orderByChild("studentId").equalTo(studentId.toDouble()).get()
-            .addOnSuccessListener { snapshot ->
-                val key = snapshot.children.firstOrNull()?.key
-                if (key != null) {
-                    studentRef.child(key).setValue(studentData)
-                }
+    fun updateUser(studentId: String, studentData: StudentData, onComplete: (Boolean) -> Unit) {
+        studentRef.child(studentId).setValue(studentData)
+            .addOnCompleteListener { task ->
+                onComplete(task.isSuccessful)
             }
     }
+
     fun getDataById(id: String): LiveData<StudentData?> {
         val data = MutableLiveData<StudentData?>()
 
@@ -92,6 +91,7 @@ class StudentRepository {
 
         return data
     }
+
     fun deleteDataById(id: String, onComplete: (Boolean) -> Unit) {
         studentRef.child(id).removeValue().addOnCompleteListener { task ->
             onComplete(task.isSuccessful)

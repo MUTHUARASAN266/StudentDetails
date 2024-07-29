@@ -20,6 +20,7 @@
     <string name="sign_in">SIGN IN</string>
     <string name="sign_up">SIGN UP</string>
     <string name="submit">SUBMIT</string>
+    <string name="update">UPDATE</string>
     <string name="forgot_password"><u>Forgot Password ?</u></string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -43,4 +44,5 @@
     <string name="profile_image">profile_image</string>
     <string name="btn_image">btn_image</string>
     <string name="female">Female</string>
+    <string name="welcome_to">Welcome to</string>
 </resources>

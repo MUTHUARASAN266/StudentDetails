@@ -1,4 +1,4 @@
-package com.studentdetails
+package com.studentdetails.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.studentdetails.R
+import com.studentdetails.Utils
 import com.studentdetails.databinding.FragmentSignInBinding
 
 class SignIn : Fragment() {
@@ -49,7 +51,7 @@ class SignIn : Fragment() {
                 userName.isEmpty() -> showError("Username is empty")
                 password.isEmpty() -> showError("password is empty")
                 else -> {
-                    startActivity(Intent(requireActivity(),DashboardScreen::class.java))
+                    startActivity(Intent(requireActivity(), DashboardScreen::class.java))
 
                 }
 

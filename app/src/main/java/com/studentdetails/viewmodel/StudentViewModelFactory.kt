@@ -1,7 +1,8 @@
-package com.studentdetails
+package com.studentdetails.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.studentdetails.repositry.StudentRepository
 
 class StudentViewModelFactory(private val repository: StudentRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

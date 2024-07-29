@@ -1,4 +1,4 @@
-package com.studentdetails
+package com.studentdetails.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,6 +12,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.studentdetails.R
 import com.studentdetails.databinding.FragmentStudentMapScreenBinding
 
 

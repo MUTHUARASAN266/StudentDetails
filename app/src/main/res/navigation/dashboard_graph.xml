@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/addStudentScreen"
-        android:name="com.studentdetails.AddStudentScreen"
+        android:name="com.studentdetails.ui.AddStudentScreen"
         android:label="fragment_add_student_screen"
         tools:layout="@layout/fragment_add_student_screen" />
     <fragment
         android:id="@+id/viewStudentScreen"
-        android:name="com.studentdetails.ViewStudentScreen"
+        android:name="com.studentdetails.ui.ViewStudentScreen"
         android:label="fragment_view_student_screen"
         tools:layout="@layout/fragment_view_student_screen" >
         <action
@@ -21,12 +21,12 @@
     </fragment>
     <fragment
         android:id="@+id/studentMapScreen"
-        android:name="com.studentdetails.StudentMapScreen"
+        android:name="com.studentdetails.ui.StudentMapScreen"
         android:label="fragment_student_map_screen"
         tools:layout="@layout/fragment_student_map_screen" />
     <fragment
         android:id="@+id/studentDashboard"
-        android:name="com.studentdetails.StudentDashboard"
+        android:name="com.studentdetails.ui.StudentDashboard"
         android:label="fragment_student_dashboard"
         tools:layout="@layout/fragment_student_dashboard" >
         <action
@@ -41,11 +41,23 @@
     </fragment>
     <fragment
         android:id="@+id/studentDetails"
-        android:name="com.studentdetails.StudentDetailsScreen"
+        android:name="com.studentdetails.ui.StudentDetailsScreen"
         android:label="fragment_student_details"
         tools:layout="@layout/fragment_student_details_screen" >
         <action
             android:id="@+id/action_studentDetails_to_viewStudentScreen"
             app:destination="@id/viewStudentScreen" />
+        <action
+            android:id="@+id/action_studentDetails_to_editStudentDataScreen"
+            app:destination="@id/editStudentDataScreen" />
+    </fragment>
+    <fragment
+        android:id="@+id/editStudentDataScreen"
+        android:name="com.studentdetails.ui.EditStudentDataScreen"
+        android:label="fragment_edit_student_data_screen"
+        tools:layout="@layout/fragment_edit_student_data_screen" >
+        <action
+            android:id="@+id/action_editStudentDataScreen_to_studentDetails"
+            app:destination="@id/studentDetails" />
     </fragment>
 </navigation>

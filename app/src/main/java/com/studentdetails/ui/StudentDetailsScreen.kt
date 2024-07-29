@@ -1,4 +1,4 @@
-package com.studentdetails
+package com.studentdetails.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,6 +8,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.studentdetails.R
+import com.studentdetails.repositry.StudentRepository
+import com.studentdetails.viewmodel.StudentViewModel
+import com.studentdetails.viewmodel.StudentViewModelFactory
 import com.studentdetails.Utils.showSnackbar
 import com.studentdetails.databinding.FragmentStudentDetailsScreenBinding
 
@@ -17,6 +21,7 @@ class StudentDetailsScreen : Fragment() {
     private val studentViewModel: StudentViewModel by viewModels {
         StudentViewModelFactory(StudentRepository())
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -29,7 +34,7 @@ class StudentDetailsScreen : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentStudentDetailsScreenBinding.inflate(inflater,container,false)
+        binding = FragmentStudentDetailsScreenBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -40,9 +45,17 @@ class StudentDetailsScreen : Fragment() {
         getStudentData()
         deleteStudentData()
 
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigateUp()
+        binding.apply {
+            toolbar.setNavigationOnClickListener {
+                findNavController().navigateUp()
+            }
+            btnUpdate.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putString("update_studentId", studentId)
+                findNavController().navigate(R.id.action_studentDetails_to_editStudentDataScreen,bundle)
+            }
         }
+
 
     }
 
@@ -54,7 +67,12 @@ class StudentDetailsScreen : Fragment() {
                     if (isSuccessful) {
                         findNavController().navigate(R.id.action_studentDetails_to_viewStudentScreen)
                     } else {
-                        showSnackbar(binding.root, "Failed to delete data", R.color.white, Snackbar.LENGTH_SHORT)
+                        showSnackbar(
+                            binding.root,
+                            "Failed to delete data",
+                            R.color.white,
+                            Snackbar.LENGTH_SHORT
+                        )
                     }
                 }
             }
@@ -64,7 +82,7 @@ class StudentDetailsScreen : Fragment() {
     private fun getStudentData() {
         binding.apply {
             studentId?.let {
-                studentViewModel.getDataById(it).observe(viewLifecycleOwner){ studentData->
+                studentViewModel.getDataById(it).observe(viewLifecycleOwner) { studentData ->
                     sdStudentName.text = studentData?.studentName
                     sdStudentGrade.text = studentData?.studentClassAndStudentSection
                     sdStudentSchool.text = studentData?.studentSchoolName

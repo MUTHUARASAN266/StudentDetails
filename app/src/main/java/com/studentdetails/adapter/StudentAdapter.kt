@@ -1,11 +1,13 @@
-package com.studentdetails
+package com.studentdetails.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.studentdetails.OnItemClickListener
 import com.studentdetails.databinding.StudentListBinding
+import com.studentdetails.model.StudentData
 
-class StudentAdapter(private var dataList: List<StudentData>,private var listener: OnItemClickListener) : RecyclerView.Adapter<StudentAdapter.ViewHolder>() {
+class StudentAdapter(private var dataList: List<StudentData>, private var listener: OnItemClickListener) : RecyclerView.Adapter<StudentAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: StudentListBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(data: StudentData) {

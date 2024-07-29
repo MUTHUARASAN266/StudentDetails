@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".ui.AddStudentScreen">
+    tools:context=".ui.EditStudentDataScreen">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
@@ -16,9 +16,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/back_arrow"
-        app:title="Add Data"
+        app:title="Edit Data"
         app:titleTextColor="@android:color/white" />
-
 
     <ScrollView
         android:layout_width="match_parent"
@@ -37,6 +36,7 @@
 
 
 
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/sd_circular_card_view"
                 android:layout_width="@dimen/dp150"
@@ -48,7 +48,7 @@
                 app:strokeWidth="@dimen/dp1">
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/student_profile_image"
+                    android:id="@+id/edit_student_profile_image"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:layout_gravity="center"
@@ -59,6 +59,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
             </com.google.android.material.card.MaterialCardView>
+
 
 
             <ImageView
@@ -87,7 +88,7 @@
                 app:hintTextColor="@color/colorAccent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/ed_name"
+                    android:id="@+id/edit_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -103,27 +104,27 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dp5"
                 android:orientation="horizontal"
+                android:layout_margin="@dimen/dp5"
                 android:weightSum="2">
 
 
                 <Spinner
-                    android:id="@+id/spinner_student_class"
+                    android:id="@+id/edit_spinner_student_class"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp50"
-                    android:layout_weight="1"
                     android:background="@drawable/spinner_background"
-                    android:popupBackground="@color/colorAccent" />
+                    android:popupBackground="@color/colorAccent"
+                    android:layout_weight="1"/>
 
                 <Spinner
-                    android:id="@+id/spinner_student_section"
+                    android:id="@+id/edit_spinner_student_section"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp50"
                     android:layout_marginStart="@dimen/dp3"
-                    android:layout_weight="1"
                     android:background="@drawable/spinner_background"
-                    android:popupBackground="@color/colorAccent" />
+                    android:popupBackground="@color/colorAccent"
+                    android:layout_weight="1" />
             </LinearLayout>
 
 
@@ -143,7 +144,7 @@
                 app:hintTextColor="@color/colorAccent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/ed_schoolName"
+                    android:id="@+id/edit_schoolName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -164,7 +165,7 @@
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/radioButtonMale"
+                    android:id="@+id/edit_radioButtonMale"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -172,7 +173,7 @@
                     android:textColor="@color/black" />
 
                 <RadioButton
-                    android:id="@+id/radioButtonFemale"
+                    android:id="@+id/edit_radioButtonFemale"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -199,7 +200,7 @@
                 app:hintTextColor="@color/colorAccent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/ed_dob"
+                    android:id="@+id/edit_dob"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -211,6 +212,7 @@
                     android:textCursorDrawable="@null" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp56"
@@ -227,7 +229,7 @@
                 app:hintTextColor="@color/colorAccent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/ed_blood"
+                    android:id="@+id/edit_blood"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -256,7 +258,7 @@
                 app:hintTextColor="@color/colorAccent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/ed_father_name"
+                    android:id="@+id/edit_father_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -268,19 +270,6 @@
                     android:textCursorDrawable="@null" />
 
             </com.google.android.material.textfield.TextInputLayout>
-
-            <ProgressBar
-                android:id="@+id/progress_circular"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:indeterminateTint="@color/colorPrimary"
-                style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -298,7 +287,7 @@
                 app:hintTextColor="@color/colorAccent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/ed_mother_name"
+                    android:id="@+id/edit_mother_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -327,7 +316,7 @@
                 app:hintTextColor="@color/colorAccent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/ed_parent_contact_no"
+                    android:id="@+id/edit_parent_contact_no"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -358,7 +347,7 @@
                 app:hintTextColor="@color/colorAccent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/ed_address"
+                    android:id="@+id/edit_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -387,7 +376,7 @@
                 app:hintTextColor="@color/colorAccent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/ed_city"
+                    android:id="@+id/edit_city"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -416,7 +405,7 @@
                 app:hintTextColor="@color/colorAccent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/ed_state"
+                    android:id="@+id/edit_state"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -445,7 +434,7 @@
                 app:hintTextColor="@color/colorAccent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/ed_zip"
+                    android:id="@+id/edit_zip"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -476,7 +465,7 @@
                 app:hintTextColor="@color/colorAccent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/ed_emergency_number"
+                    android:id="@+id/edit_emergency_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -492,13 +481,13 @@
 
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_submite"
+                android:id="@+id/btn_update"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp5"
                 android:layout_marginBottom="@dimen/dp15"
                 android:background="@drawable/btn_background"
-                android:text="@string/submit"
+                android:text="@string/update"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp20"
                 app:backgroundTint="@color/colorPrimaryDark"

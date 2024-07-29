@@ -1,4 +1,4 @@
-package com.studentdetails
+package com.studentdetails.ui
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
@@ -20,9 +20,14 @@ import android.widget.RadioButton
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.studentdetails.R
+import com.studentdetails.model.StudentData
+import com.studentdetails.repositry.StudentRepository
+import com.studentdetails.viewmodel.StudentViewModel
+import com.studentdetails.viewmodel.StudentViewModelFactory
+import com.studentdetails.Utils
 import com.studentdetails.databinding.FragmentAddStudentScreenBinding
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
@@ -61,8 +66,6 @@ class AddStudentScreen : Fragment() {
         binding.apply {
             setupSpinner()
             btnSubmite.setOnClickListener {
-
-
                 validation()
 
             }
@@ -255,6 +258,7 @@ class AddStudentScreen : Fragment() {
 
 
                 else -> {
+                    progressCircular.visibility = View.VISIBLE
                     storeDataInFirebase(
                         studentName,
                         spinnerData(),
@@ -320,9 +324,11 @@ class AddStudentScreen : Fragment() {
             studentImage = studentimage
         )
         studentViewModel.addStudent(studentData)
+        binding. progressCircular.visibility = View.GONE
     }
 
     private fun showMessage(message: String) {
         Utils.showSnackbar(binding.root, message, R.color.white, Snackbar.LENGTH_SHORT)
     }
+
 }

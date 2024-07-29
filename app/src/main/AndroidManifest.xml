@@ -17,19 +17,13 @@
         android:theme="@style/Theme.StudentDetails"
         tools:targetApi="31">
         <activity
-            android:name=".DashboardScreen"
+            android:name=".ui.DashboardScreen"
             android:exported="false" />
         <activity
-            android:name=".OnboardingScreen"
+            android:name=".ui.OnboardingScreen"
             android:exported="false" />
         <activity
-            android:name=".SignUPScreen"
-            android:exported="false" />
-        <activity
-            android:name=".LoginScreen"
-            android:exported="false" />
-        <activity
-            android:name=".DemoScreen"
+            android:name=".ui.DemoScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

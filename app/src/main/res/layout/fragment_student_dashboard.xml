@@ -1,65 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
-    tools:context=".StudentDashboard">
+    tools:context=".ui.StudentDashboard">
 
-    <!-- TODO: Update blank fragment layout -->
+
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/img_backd1"
-
+        android:id="@+id/img_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scaleType="fitXY"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/intersection_4"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/intersection_4" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/img_background1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/group_247"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_linear" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_add"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/dp60"
-        android:background="@drawable/btn_background"
-        android:text="@string/add_student"
-        android:textColor="@color/white"
-        android:textSize="@dimen/sp20"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/btn_home"
+        android:layout_width="@dimen/dp50"
+        android:layout_height="@dimen/dp50"
         android:layout_margin="@dimen/dp20"
-        app:backgroundTint="@color/colorPrimaryDark"
-        app:layout_constraintTop_toBottomOf="@id/img_backd1"
-        app:layout_constraintEnd_toEndOf="@id/img_backd1"
-        app:layout_constraintStart_toStartOf="@id/img_backd1" />
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_view_student"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/dp60"
-        android:background="@drawable/btn_background"
-        android:text="@string/view_student"
-        android:textColor="@color/white"
-        android:textSize="@dimen/sp20"
+        android:scaleType="fitXY"
+        android:src="@drawable/multimedia"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/btn_profile_image"
+        android:layout_width="@dimen/dp50"
+        android:layout_height="@dimen/dp50"
         android:layout_margin="@dimen/dp20"
-        app:backgroundTint="@color/colorPrimaryDark"
-        app:layout_constraintTop_toBottomOf="@id/btn_add"
-        app:layout_constraintEnd_toEndOf="@id/btn_add"
-        app:layout_constraintStart_toStartOf="@id/btn_add" />
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_map"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/dp60"
-        android:background="@drawable/btn_background"
-        android:text="@string/map_view"
-        android:textColor="@color/white"
-        android:textSize="@dimen/sp20"
+        android:backgroundTint="@color/white"
+        android:scaleType="fitXY"
+        android:src="@drawable/group_1379"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_title1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp20"
-        app:backgroundTint="@color/colorPrimaryDark"
-        app:layout_constraintTop_toBottomOf="@id/btn_view_student"
-        app:layout_constraintEnd_toEndOf="@id/btn_view_student"
-        app:layout_constraintStart_toStartOf="@id/btn_view_student" />
+        android:text="@string/welcome_to"
+        android:textColor="#D5F0F2F3"
+        android:textSize="@dimen/sp20"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_home" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_title2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp20"
+        android:text="Student Database App"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp30"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_title1" />
+
+    <LinearLayout
+        android:id="@+id/layout_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp20"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        app:layout_constraintBottom_toTopOf="@id/img_background1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_title2">
+
+        <LinearLayout
+            android:id="@+id/btn_add"
+            android:layout_width="@dimen/dp400"
+            android:layout_height="@dimen/dp200"
+            android:layout_weight="1"
+            android:background="@drawable/rectangle_3"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp70"
+                android:layout_height="@dimen/dp70"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/dp20"
+                android:backgroundTint="@color/white"
+                android:src="@drawable/group_1435"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp10"
+                android:text="@string/add_student"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp20"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_home" />
 
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_view_student"
+            android:layout_width="@dimen/dp400"
+            android:layout_height="@dimen/dp200"
+            android:layout_weight="1"
+            android:background="@drawable/rectangle_3"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp70"
+                android:layout_height="@dimen/dp70"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/dp20"
+                android:backgroundTint="@color/white"
+                android:src="@drawable/group_1436"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp10"
+                android:text="@string/view_student"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp20"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_home" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_map"
+            android:layout_width="@dimen/dp400"
+            android:layout_height="@dimen/dp200"
+            android:layout_weight="1"
+            android:background="@drawable/rectangle_3"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp70"
+                android:layout_height="@dimen/dp70"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/dp20"
+                android:backgroundTint="@color/white"
+                android:src="@drawable/group_1437"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp10"
+                android:text="@string/map_view"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp20"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_home" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

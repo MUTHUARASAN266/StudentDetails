@@ -1,4 +1,4 @@
-package com.studentdetails
+package com.studentdetails.model
 
 
 data class StudentData(
@@ -18,7 +18,5 @@ data class StudentData(
     val studentZip : String?=null,
     val studentEmergencyContactNumber : String?=null,
     val studentImage : String?=null,
-
-
 
     )
