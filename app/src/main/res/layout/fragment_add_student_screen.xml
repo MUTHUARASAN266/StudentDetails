@@ -36,7 +36,6 @@
             android:orientation="vertical">
 
 
-
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/sd_circular_card_view"
                 android:layout_width="@dimen/dp150"
@@ -211,6 +210,7 @@
                     android:textCursorDrawable="@null" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp56"
@@ -271,16 +271,16 @@
 
             <ProgressBar
                 android:id="@+id/progress_circular"
+                style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 android:indeterminateTint="@color/colorPrimary"
-                style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large" />
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -490,6 +490,66 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp10"
+                android:layout_marginBottom="@dimen/dp40"
+                android:text="@string/set_location"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/sp20" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/set_location_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/sd_green_line">
+
+                <include
+                    android:id="@+id/add_layout_student_map"
+                    layout="@layout/student_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_margin="@dimen/dp3"
+                    app:layout_constraintBottom_toTopOf="@+id/layout_location_details"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/layout_location_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dp3"
+                    android:background="@color/white"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/dp10"
+                    android:weightSum="2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/add_layout_student_map">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/txt_student_location"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_margin="@dimen/dp5"
+                        android:textColor="@color/colorAccent" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_setlocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/set_location"
+                        android:textColor="@color/white"
+                        app:backgroundTint="@color/colorPrimaryDark" />
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_submite"
@@ -501,11 +561,7 @@
                 android:text="@string/submit"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp20"
-                app:backgroundTint="@color/colorPrimaryDark"
-                app:layout_constraintBottom_toTopOf="@id/text_view2"
-                app:layout_constraintEnd_toEndOf="@id/guideline_end"
-                app:layout_constraintStart_toStartOf="@id/guideline_start"
-                app:layout_constraintTop_toBottomOf="@id/img_back1" />
+                app:backgroundTint="@color/colorPrimaryDark" />
 
 
         </LinearLayout>

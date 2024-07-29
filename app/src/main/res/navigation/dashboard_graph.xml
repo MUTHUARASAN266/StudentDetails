@@ -9,7 +9,11 @@
         android:id="@+id/addStudentScreen"
         android:name="com.studentdetails.ui.AddStudentScreen"
         android:label="fragment_add_student_screen"
-        tools:layout="@layout/fragment_add_student_screen" />
+        tools:layout="@layout/fragment_add_student_screen" >
+        <action
+            android:id="@+id/action_addStudentScreen_to_studentDashboard"
+            app:destination="@id/studentDashboard" />
+    </fragment>
     <fragment
         android:id="@+id/viewStudentScreen"
         android:name="com.studentdetails.ui.ViewStudentScreen"

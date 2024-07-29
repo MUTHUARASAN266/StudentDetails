@@ -1,11 +1,16 @@
 package com.studentdetails.ui
 
+import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.location.Address
+import android.location.Geocoder
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
@@ -18,9 +23,19 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.snackbar.Snackbar
 import com.studentdetails.R
 import com.studentdetails.model.StudentData
@@ -31,11 +46,17 @@ import com.studentdetails.Utils
 import com.studentdetails.databinding.FragmentAddStudentScreenBinding
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
+import java.util.Locale
 
-class AddStudentScreen : Fragment() {
+class AddStudentScreen : Fragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentAddStudentScreenBinding
     private var studentGender: String? = null
     private var studentimage: String? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var mMap: GoogleMap
+    private var latitude: Double? = null
+    private var longitude: Double? = null
+    private val LOCATION_PERMISSION_REQUEST_CODE = 1
 
     //    private val studentViewModel: StudentViewModel by viewModels()
     private val studentViewModel: StudentViewModel by viewModels {
@@ -44,7 +65,6 @@ class AddStudentScreen : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -59,7 +79,10 @@ class AddStudentScreen : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
+        checkLocationPermission()
+        setUpStudentMap()
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
@@ -84,38 +107,173 @@ class AddStudentScreen : Fragment() {
         }
     }
 
-    private fun checkPermissionAndPickImage() {
-        when {
-            ContextCompat.checkSelfPermission(
+    private fun clearText() {
+        binding.apply {
+            edName.text?.clear()
+            edSchoolName.text?.clear()
+            edDob.text?.clear()
+            edBlood.text?.clear()
+            edFatherName.text?.clear()
+            edMotherName.text?.clear()
+            edParentContactNo.text?.clear()
+            edAddress.text?.clear()
+            edCity.text?.clear()
+            edState.text?.clear()
+            edZip.text?.clear()
+            edEmergencyNumber.text?.clear()
+        }
+    }
+
+    private fun checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(
                 requireContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
 
-                android.Manifest.permission.READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                openImagePicker()
-            }
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
+        } else {
+            getCurrentLocation()
 
-            shouldShowRequestPermissionRationale(android.Manifest.permission.READ_EXTERNAL_STORAGE) -> {
-                showMessage("Storage access is required to pick an image.")
-                requestPermissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-            }
+        }
+    }
 
-            else -> {
-                requestPermissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+    private fun getCurrentLocation() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            == PackageManager.PERMISSION_GRANTED
+        ) {
+
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    val latLng = LatLng(location.latitude, location.longitude)
+                    latitude = location.latitude
+                    longitude = location.longitude
+                    mMap.addMarker(MarkerOptions().position(latLng).title("You are here"))
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+
+                    binding.btnSetlocation.setOnClickListener {
+                        getAddressFromLocation(location.latitude, location.longitude)
+                        Log.e("TAG_location", "getAddressFromLocation")
+                    }
+                }
             }
         }
     }
+
+    private fun getAddressFromLocation(latitude: Double, longitude: Double) {
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+        val addresses: List<Address>? = geocoder.getFromLocation(latitude, longitude, 1)
+
+        if (!addresses.isNullOrEmpty()) {
+            val address = addresses[0]
+            val addressText = StringBuilder()
+            for (i in 0..address.maxAddressLineIndex) {
+                addressText.append(address.getAddressLine(i)).append("\n")
+            }
+            showMessage("Address: $addressText")
+            binding.txtStudentLocation.text = addressText
+        }
+    }
+
+    private fun setUpStudentMap() {
+        // Initialize the map
+        val mapFragment =
+            childFragmentManager.findFragmentById(R.id.student_map_fragment) as? SupportMapFragment
+//        val mapFragmeqwnt = childFragmentManager.findFragmentById(R.id.add_layout_student_map)
+        mapFragment?.getMapAsync(this)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getCurrentLocation()
+            } else {
+                showMessage("Location permission denied")
+            }
+        }
+    }
+
+    private fun checkPermissionAndPickImage() {
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
+                // Android 13 (API level 33) and above
+                when {
+                    ContextCompat.checkSelfPermission(
+                        requireContext(),
+                        android.Manifest.permission.READ_MEDIA_IMAGES
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        openImagePicker()
+                    }
+
+                    shouldShowRequestPermissionRationale(android.Manifest.permission.READ_MEDIA_IMAGES) -> {
+                        showMessage("Media access is required to pick an image.")
+                        requestPermissionLauncher.launch(android.Manifest.permission.READ_MEDIA_IMAGES)
+                    }
+
+                    else -> {
+                        requestPermissionLauncher.launch(android.Manifest.permission.READ_MEDIA_IMAGES)
+                    }
+                }
+            }
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
+                // Android 10 (API level 29) to 12 (API level 31)
+                when {
+                    ContextCompat.checkSelfPermission(
+                        requireContext(),
+                        android.Manifest.permission.READ_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        openImagePicker()
+                    }
+
+                    shouldShowRequestPermissionRationale(android.Manifest.permission.READ_EXTERNAL_STORAGE) -> {
+                        showMessage("Storage access is required to pick an image.")
+                        requestPermissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                    }
+
+                    else -> {
+                        requestPermissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                    }
+                }
+            }
+
+            else -> {
+                // For Android 9 (API level 28) and below, no special permissions needed
+                openImagePicker()
+            }
+        }
+    }
+
 
     private fun openImagePicker() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         pickImage.launch(intent)
     }
 
-    private fun handleImageUri(uri: Uri) {
-        val inputStream: InputStream? = requireContext().contentResolver.openInputStream(uri)
-        val bitmap = BitmapFactory.decodeStream(inputStream)
-        val base64Image = encodeImageToBase64(bitmap)
-//        saveImageToDatabase(base64Image)
-        studentimage = base64Image
+    private fun convertImageToBase64(context: Context, imageUri: Uri): String? {
+        return try {
+            val inputStream: InputStream? = context.contentResolver.openInputStream(imageUri)
+            val bitmap: Bitmap = BitmapFactory.decodeStream(inputStream)
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+            val byteArray = byteArrayOutputStream.toByteArray()
+            Base64.encodeToString(byteArray, Base64.DEFAULT)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
     private fun encodeImageToBase64(bitmap: Bitmap): String {
@@ -124,6 +282,7 @@ class AddStudentScreen : Fragment() {
         val byteArray: ByteArray = byteArrayOutputStream.toByteArray()
         return Base64.encodeToString(byteArray, Base64.DEFAULT)
     }
+
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -140,7 +299,8 @@ class AddStudentScreen : Fragment() {
                 val data: Intent? = result.data
                 data?.data?.let { uri ->
                     binding.studentProfileImage.setImageURI(uri)
-                    handleImageUri(uri)
+                 //   studentimage = convertImageToBase64(requireContext(), uri) // Update this line
+                    Log.e("image uri", "image uri $studentimage: image")
                 }
             }
         }
@@ -321,14 +481,24 @@ class AddStudentScreen : Fragment() {
             studentState = studentState,
             studentZip = studentZip,
             studentEmergencyContactNumber = studentEmergencyContactNumber,
-            studentImage = studentimage
+            studentImage = studentimage,
+            latitude = latitude,
+            longitude = longitude,
         )
         studentViewModel.addStudent(studentData)
-        binding. progressCircular.visibility = View.GONE
+        Log.e("studentData", "storeDataInFirebase: $studentData")
+        clearText()
+        findNavController().navigate(R.id.action_addStudentScreen_to_studentDashboard)
+        binding.progressCircular.visibility = View.GONE
     }
 
     private fun showMessage(message: String) {
         Utils.showSnackbar(binding.root, message, R.color.white, Snackbar.LENGTH_SHORT)
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
+        getCurrentLocation()
     }
 
 }

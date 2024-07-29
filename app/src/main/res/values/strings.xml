@@ -35,6 +35,7 @@
     <string name="parent_details">Parents Details</string>
     <string name="residential_details">Residential Details</string>
     <string name="location">Location</string>
+    <string name="set_location">Set Location</string>
     <string name="emergency_number">Emergency Contact No</string>
     <string name="address">Address</string>
     <string name="city">City</string>

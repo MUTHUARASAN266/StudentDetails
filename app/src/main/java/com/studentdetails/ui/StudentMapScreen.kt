@@ -5,21 +5,28 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
 import com.studentdetails.R
 import com.studentdetails.databinding.FragmentStudentMapScreenBinding
+import com.studentdetails.repositry.StudentRepository
+import com.studentdetails.viewmodel.StudentViewModel
+import com.studentdetails.viewmodel.StudentViewModelFactory
 
 
 class StudentMapScreen : Fragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentStudentMapScreenBinding
     private lateinit var mMap: GoogleMap
-
+    private val studentViewModel: StudentViewModel by viewModels {
+        StudentViewModelFactory(StudentRepository())
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -47,10 +54,24 @@ class StudentMapScreen : Fragment(), OnMapReadyCallback {
     }
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        // Add a marker at a specific location   10.412616126196701, 79.28131720484988
-        val location = LatLng(10.412616126196701, 79.28131720484988) // Example coordinates (Sydney)
-        mMap.addMarker(MarkerOptions().position(location).title("Kalugapulikkadu"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15f))
+        loadStudentLocations()
     }
-
+    private fun loadStudentLocations() {
+        studentViewModel.items.observe(viewLifecycleOwner) { students ->
+            for (student in students) {
+                val location = LatLng(student.latitude!!, student.longitude!!)
+                mMap.addMarker(MarkerOptions().position(location).title(student.studentName))
+            }
+            if (students.isNotEmpty()) {
+                val boundsBuilder = LatLngBounds.Builder()
+                for (student in students) {
+                    val location = LatLng(student.latitude!!, student.longitude!!)
+                    boundsBuilder.include(location)
+                }
+                val bounds = boundsBuilder.build()
+                val padding = 100 // padding around the map edges
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding))
+            }
+        }
+    }
 }
