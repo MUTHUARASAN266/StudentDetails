@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -53,8 +54,8 @@ class StudentDetailsScreen : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
 
         getStudentData()
-        deleteStudentData()
-        Log.e("latlong", "onViewCreated: $longitude $latitude", )
+        Log.e("latlong", "onViewCreated: $longitude $latitude")
+        Log.e("latlong StudentDetailsScreen", "onViewCreated studentId: $studentId")
 
         binding.apply {
             toolbar.setNavigationOnClickListener {
@@ -63,10 +64,15 @@ class StudentDetailsScreen : Fragment(), OnMapReadyCallback {
             btnUpdate.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putString("update_studentId", studentId)
+                Log.e("TAG_btnUpdate", "onViewCreated: $studentId", )
                 findNavController().navigate(
                     R.id.action_studentDetails_to_editStudentDataScreen,
                     bundle
                 )
+            }
+
+            binding.btnDelete.setOnClickListener {
+                deleteStudentData()
             }
         }
 
@@ -75,34 +81,43 @@ class StudentDetailsScreen : Fragment(), OnMapReadyCallback {
 
     private fun setUpStudentMap() {
         // Initialize the map
-        val mapFragment = childFragmentManager.findFragmentById(R.id.student_map_fragment) as? SupportMapFragment
+        val mapFragment =
+            childFragmentManager.findFragmentById(R.id.student_map_fragment) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
     }
 
     private fun deleteStudentData() {
-        binding.btnDelete.setOnClickListener {
-
-            studentId?.let { it1 ->
-                studentViewModel.deleteDataById(it1) { isSuccessful ->
-                    if (isSuccessful) {
-                        findNavController().navigate(R.id.action_studentDetails_to_viewStudentScreen)
-                    } else {
-                        showSnackbar(
-                            binding.root,
-                            "Failed to delete data",
-                            R.color.white,
-                            Snackbar.LENGTH_SHORT
-                        )
-                    }
+        studentId?.let { studentId ->
+            studentViewModel.deleteDataById(studentId) { isSuccessful ->
+                if (isSuccessful) {
+                    findNavController().navigate(R.id.action_studentDetails_to_viewStudentScreen)
+                    showSnackbar(
+                        binding.root,
+                        "Data Deleted Successfully",
+                        R.color.white,
+                        Snackbar.LENGTH_SHORT
+                    )
+                } else {
+                    showSnackbar(
+                        binding.root,
+                        "Failed to delete data",
+                        R.color.white,
+                        Snackbar.LENGTH_SHORT
+                    )
                 }
             }
         }
+
     }
 
     private fun getStudentData() {
         binding.apply {
             studentId?.let {
                 studentViewModel.getDataById(it).observe(viewLifecycleOwner) { studentData ->
+                    Glide.with(binding.root.context)
+                        .load(studentData?.studentImage)
+                        .placeholder(R.drawable.student)
+                        .into(binding.sdStudentImage)
                     sdStudentName.text = studentData?.studentName
                     sdStudentGrade.text = studentData?.studentClassAndStudentSection
                     sdStudentSchool.text = studentData?.studentSchoolName

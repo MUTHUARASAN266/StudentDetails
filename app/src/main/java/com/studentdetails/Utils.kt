@@ -1,5 +1,10 @@
 package com.studentdetails
 
+import android.graphics.Bitmap
+import android.graphics.BitmapShader
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Shader
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -22,6 +27,28 @@ object Utils {
         textView.setTextColor(ContextCompat.getColor(view.context, textColor))
 
         snackbar.show()
+    }
+
+
+    fun getCircularBitmap(bitmap: Bitmap, size: Int): Bitmap {
+        // Scale down the bitmap to the desired size
+        val scaledBitmap = Bitmap.createScaledBitmap(bitmap, size, size, false)
+        val radius = size / 2f
+
+        // Create a circular bitmap
+        val output = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(output)
+        val paint = Paint()
+        val shader = BitmapShader(scaledBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
+        paint.shader = shader
+        paint.isAntiAlias = true
+
+        // Draw a circle with the bitmap shader
+        canvas.drawCircle(radius, radius, radius, paint)
+
+        // Cleanup
+        scaledBitmap.recycle()
+        return output
     }
 
 }

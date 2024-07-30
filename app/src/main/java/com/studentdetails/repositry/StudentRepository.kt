@@ -61,7 +61,6 @@ class StudentRepository {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Handle possible errors
                 Log.e("TAG_fetchItems", "addStudent: ${error.message}")
             }
         })
@@ -73,6 +72,11 @@ class StudentRepository {
         studentRef.child(studentId).setValue(studentData)
             .addOnCompleteListener { task ->
                 onComplete(task.isSuccessful)
+                Log.e("TAG_updateUser", "updateUser: isSuccessful")
+            }
+            .addOnFailureListener { exception ->
+
+                Log.e("TAG_updateUser", "updateUser: ${exception.message}")
             }
     }
 
@@ -95,7 +99,11 @@ class StudentRepository {
     fun deleteDataById(id: String, onComplete: (Boolean) -> Unit) {
         studentRef.child(id).removeValue().addOnCompleteListener { task ->
             onComplete(task.isSuccessful)
+            Log.e("TAG_deleteDataById", "deleteDataById: isSuccessful")
         }
+            .addOnFailureListener { exception ->
+                Log.e("TAG_deleteDataById", "deleteDataById: ${exception.message}")
+            }
     }
 }
 

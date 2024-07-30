@@ -1,6 +1,7 @@
 package com.studentdetails.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,6 +57,7 @@ class ViewStudentScreen : Fragment(), OnItemClickListener {
     override fun onItemClick(data: StudentData) {
         val bundle = Bundle()
         bundle.putString("studentId", data.studentId.toString())
+        Log.e("TAG_ViewStudentScreen", "onItemClick: studentId ${data.studentId}")
         findNavController().navigate(R.id.action_viewStudentScreen_to_studentDetails,bundle)
     }
 }

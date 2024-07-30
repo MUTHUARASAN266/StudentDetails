@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.storage.FirebaseStorage
 import com.studentdetails.R
 import com.studentdetails.model.StudentData
 import com.studentdetails.repositry.StudentRepository
@@ -47,11 +48,13 @@ import com.studentdetails.databinding.FragmentAddStudentScreenBinding
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.util.Locale
+import java.util.UUID
 
 class AddStudentScreen : Fragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentAddStudentScreenBinding
     private var studentGender: String? = null
-    private var studentimage: String? = null
+    private var studentImage: String? = null
+    private var imageUri: Uri? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mMap: GoogleMap
     private var latitude: Double? = null
@@ -228,6 +231,7 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
                     }
                 }
             }
+
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
                 // Android 10 (API level 29) to 12 (API level 31)
                 when {
@@ -262,27 +266,6 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
         pickImage.launch(intent)
     }
 
-    private fun convertImageToBase64(context: Context, imageUri: Uri): String? {
-        return try {
-            val inputStream: InputStream? = context.contentResolver.openInputStream(imageUri)
-            val bitmap: Bitmap = BitmapFactory.decodeStream(inputStream)
-            val byteArrayOutputStream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
-            val byteArray = byteArrayOutputStream.toByteArray()
-            Base64.encodeToString(byteArray, Base64.DEFAULT)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
-
-    private fun encodeImageToBase64(bitmap: Bitmap): String {
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
-        val byteArray: ByteArray = byteArrayOutputStream.toByteArray()
-        return Base64.encodeToString(byteArray, Base64.DEFAULT)
-    }
-
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -299,8 +282,7 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
                 val data: Intent? = result.data
                 data?.data?.let { uri ->
                     binding.studentProfileImage.setImageURI(uri)
-                 //   studentimage = convertImageToBase64(requireContext(), uri) // Update this line
-                    Log.e("image uri", "image uri $studentimage: image")
+                    imageUri = uri
                 }
             }
         }
@@ -418,8 +400,9 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
 
 
                 else -> {
+                    //uploadImageToDatabase()
                     progressCircular.visibility = View.VISIBLE
-                    storeDataInFirebase(
+                    uploadImageToDatabase(
                         studentName,
                         spinnerData(),
                         studentSchoolName,
@@ -437,7 +420,7 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
                     )
                     Utils.showSnackbar(
                         binding.root,
-                        "Student data saved successfully",
+                        "wait few second your data storing to database",
                         R.color.white,
                         Snackbar.LENGTH_SHORT
                     )
@@ -448,6 +431,120 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
 
         }
     }
+
+    private fun uploadImageToDatabase() {
+        imageUri?.let { uri ->
+            val fileReference = FirebaseStorage.getInstance().reference
+                .child("student_images/${UUID.randomUUID()}.jpg")
+
+            fileReference.putFile(uri).addOnSuccessListener {
+                fileReference.downloadUrl.addOnSuccessListener { downloadUrl ->
+                    studentImage = downloadUrl.toString()
+                    Log.e("studentImage", "uploadImageToDatabase: $studentImage")
+                }
+            }.addOnFailureListener {
+
+            }
+        }
+    }
+    private fun uploadImageToDatabase(
+        studentName: String,
+        spinnerData: String,
+        studentSchoolName: String,
+        studentGender: String?,
+        studentDob: String,
+        studentBloodGroup: String,
+        studentFatherName: String,
+        studentMotherName: String,
+        studentParentContactNumber: String,
+        studentAddress: String,
+        studentCity: String,
+        studentState: String,
+        studentZip: String,
+        studentEmergencyContactNumber: String
+    ) {
+        imageUri?.let { uri ->
+            val fileReference = FirebaseStorage.getInstance().reference
+                .child("student_images/${UUID.randomUUID()}.jpg")
+
+            fileReference.putFile(uri).addOnSuccessListener {
+                fileReference.downloadUrl.addOnSuccessListener { downloadUrl ->
+                    studentImage = downloadUrl.toString()
+                    storeDataInFirebase(
+                        studentName,
+                        spinnerData,
+                        studentSchoolName,
+                        studentGender,
+                        studentDob,
+                        studentBloodGroup,
+                        studentFatherName,
+                        studentMotherName,
+                        studentParentContactNumber,
+                        studentAddress,
+                        studentCity,
+                        studentState,
+                        studentZip,
+                        studentEmergencyContactNumber,
+                        studentImage
+                    )
+                }
+            }.addOnFailureListener {
+                showMessage("Failed to upload image")
+            }
+        } ?: run {
+            showMessage("Image not selected")
+        }
+    }
+
+    private fun storeDataInFirebase(
+        studentName: String,
+        spinnerData: String,
+        studentSchoolName: String,
+        studentGender: String?,
+        studentDob: String,
+        studentBloodGroup: String,
+        studentFatherName: String,
+        studentMotherName: String,
+        studentParentContactNumber: String,
+        studentAddress: String,
+        studentCity: String,
+        studentState: String,
+        studentZip: String,
+        studentEmergencyContactNumber: String,
+        studentImage: String?
+    ) {
+        val studentData = StudentData(
+            studentName = studentName,
+            studentClassAndStudentSection = spinnerData,
+            studentSchoolName = studentSchoolName,
+            studentGender = studentGender,
+            studentDob = studentDob,
+            studentBloodGroup = studentBloodGroup,
+            studentFatherName = studentFatherName,
+            studentMotherName = studentMotherName,
+            studentParentContactNumber = studentParentContactNumber,
+            studentAddress = studentAddress,
+            studentCity = studentCity,
+            studentState = studentState,
+            studentZip = studentZip,
+            studentEmergencyContactNumber = studentEmergencyContactNumber,
+            studentImage = studentImage,
+            latitude = latitude,
+            longitude = longitude
+        )
+        studentViewModel.addStudent(studentData)
+        Utils.showSnackbar(
+            binding.root,
+            "Student data saved successfully",
+            R.color.white,
+            Snackbar.LENGTH_SHORT
+        )
+        Log.e("studentData", "storeDataInFirebase: $studentData")
+        clearText()
+        findNavController().navigate(R.id.action_addStudentScreen_to_studentDashboard)
+        binding.progressCircular.visibility = View.GONE
+    }
+
 
     private fun storeDataInFirebase(
         studentName: String,
@@ -481,7 +578,7 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
             studentState = studentState,
             studentZip = studentZip,
             studentEmergencyContactNumber = studentEmergencyContactNumber,
-            studentImage = studentimage,
+            studentImage = studentImage,
             latitude = latitude,
             longitude = longitude,
         )

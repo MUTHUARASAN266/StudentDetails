@@ -41,6 +41,8 @@ class EditStudentDataScreen : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             studentId = it.getString("update_studentId")
+            Log.e("EditStudentDataScreen_TAG_studentId1", "studentId: $it")
+
         }
     }
 
@@ -67,6 +69,7 @@ class EditStudentDataScreen : Fragment() {
 
             setupSpinner()
             setData()
+            Log.e("EditStudentDataScreen_TAG_studentId1", "studentId: $studentId")
             btnUpdate.setOnClickListener {
                 validation()
 
@@ -319,7 +322,7 @@ class EditStudentDataScreen : Fragment() {
         studentEmergencyContactNumber: String
     ) {
         val studentData = StudentData(
-
+            studentId = studentId,
             studentName = studentName,
             studentClassAndStudentSection = spinnerData,
             studentSchoolName = studentSchoolName,
@@ -340,10 +343,12 @@ class EditStudentDataScreen : Fragment() {
             studentViewModel.updateUser(it, studentData) { isSuccessful ->
                 if (isSuccessful) {
                     showMessage("User updated successfully")
-                    findNavController().navigate(R.id.action_editStudentDataScreen_to_studentDetails)
+                    setData()
+                    Log.e("TAG_studentId", "studentId: $it")
+                    Log.e("EditStudentDataScreen_TAG_studentId", "studentId: $it,studentData: $studentData")
+                    findNavController().navigate(R.id.action_editStudentDataScreen_to_viewStudentScreen)
                 } else {
                     showMessage("Failed to update user")
-
                 }
             }
         }
