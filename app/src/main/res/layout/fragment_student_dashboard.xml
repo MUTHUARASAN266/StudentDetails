@@ -17,15 +17,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/img_background1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:scaleType="fitXY"
         android:src="@drawable/group_247"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout_linear" />
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -43,11 +44,11 @@
         android:layout_width="@dimen/dp50"
         android:layout_height="@dimen/dp50"
         android:layout_margin="@dimen/dp20"
-        android:backgroundTint="@color/white"
         android:scaleType="fitXY"
-        android:src="@drawable/group_1379"
+        android:src="@drawable/logout_icon"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txt_title1"

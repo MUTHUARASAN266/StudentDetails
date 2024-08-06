@@ -183,6 +183,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/text_input_layout_dob"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp56"
                 android:layout_margin="@dimen/dp5"
@@ -193,6 +194,11 @@
                 app:boxStrokeWidth="1dp"
                 app:boxStrokeWidthFocused="1dp"
                 app:expandedHintEnabled="true"
+                app:endIconDrawable="@drawable/calendar"
+                app:endIconCheckable="true"
+                app:endIconMode="custom"
+                app:endIconTint="@color/colorAccent"
+                app:endIconScaleType="center"
                 app:hintAnimationEnabled="true"
                 app:hintEnabled="true"
                 app:hintTextColor="@color/colorAccent">

@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_viewStudentScreen_to_studentDetails"
             app:destination="@id/studentDetails" />
+        <action
+            android:id="@+id/action_viewStudentScreen_to_studentDashboard"
+            app:destination="@id/studentDashboard" />
     </fragment>
     <fragment
         android:id="@+id/studentMapScreen"
@@ -63,6 +66,7 @@
 
         <action
             android:id="@+id/action_editStudentDataScreen_to_viewStudentScreen"
-            app:destination="@id/viewStudentScreen" />
+            app:destination="@id/viewStudentScreen"
+            app:popUpToInclusive="true"/>
     </fragment>
 </navigation>

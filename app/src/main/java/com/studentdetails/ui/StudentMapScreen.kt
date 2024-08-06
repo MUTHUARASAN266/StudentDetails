@@ -59,8 +59,7 @@ class StudentMapScreen : Fragment(), OnMapReadyCallback {
         }
 
         // Initialize the map
-        val mapFragment = childFragmentManager
-            .findFragmentById(R.id.map_fragment) as? SupportMapFragment
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map_fragment) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
     }
 
@@ -75,9 +74,7 @@ class StudentMapScreen : Fragment(), OnMapReadyCallback {
             try {
                 for (student in students) {
                     val location = LatLng(student.latitude!!, student.longitude!!)
-                    //   mMap.addMarker(MarkerOptions().position(location).title(student.studentName))
-
-                    addingImagetToMap(student, mMap, location)
+                    addingImageToMap(student, mMap, location)
                 }
                 if (students.isNotEmpty()) {
                     val boundsBuilder = LatLngBounds.Builder()
@@ -90,7 +87,7 @@ class StudentMapScreen : Fragment(), OnMapReadyCallback {
                     mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding))
                 }
             } catch (e: Exception) {
-                Log.e("TAG_Exception", "loadStudentLocations: ${e.message}")
+                Log.e(TAG, "loadStudentLocations: ${e.message}")
             }
         }
     }
@@ -101,7 +98,7 @@ class StudentMapScreen : Fragment(), OnMapReadyCallback {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 10f))
     }
 
-    private fun addingImagetToMap(student: StudentData, mMap: GoogleMap, location: LatLng) {
+    private fun addingImageToMap(student: StudentData, mMap: GoogleMap, location: LatLng) {
         // Load image and add marker
         Glide.with(this)
             .asBitmap()
@@ -120,9 +117,13 @@ class StudentMapScreen : Fragment(), OnMapReadyCallback {
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {
-
+                    Log.e(TAG, "onLoadCleared")
                 }
             })
 
+    }
+
+    companion object {
+        const val TAG = "StudentMapScreen"
     }
 }

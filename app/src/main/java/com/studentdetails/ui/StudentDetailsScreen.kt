@@ -29,6 +29,7 @@ class StudentDetailsScreen : Fragment(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private var latitude: Double? = null
     private var longitude: Double? = null
+    private var studentImage: String? = null
     private val studentViewModel: StudentViewModel by viewModels {
         StudentViewModelFactory(StudentRepository())
     }
@@ -54,8 +55,8 @@ class StudentDetailsScreen : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
 
         getStudentData()
-        Log.e("latlong", "onViewCreated: $longitude $latitude")
-        Log.e("latlong StudentDetailsScreen", "onViewCreated studentId: $studentId")
+        Log.e(TAG, "longitude & latitude : $longitude $latitude")
+        Log.e(TAG, "studentId: $studentId")
 
         binding.apply {
             toolbar.setNavigationOnClickListener {
@@ -64,7 +65,11 @@ class StudentDetailsScreen : Fragment(), OnMapReadyCallback {
             btnUpdate.setOnClickListener {
                 val bundle = Bundle()
                 bundle.putString("update_studentId", studentId)
-                Log.e("TAG_btnUpdate", "onViewCreated: $studentId", )
+                latitude?.let { latitude -> bundle.putDouble("update_latitude", latitude) }
+                longitude?.let { longitude -> bundle.putDouble("update_longitude", longitude) }
+                bundle.putString("update_studentImage", studentImage)
+                Log.e(TAG, "onViewCreated: $studentId")
+                Log.e(TAG, "latitude & longitude: $latitude, $longitude")
                 findNavController().navigate(
                     R.id.action_studentDetails_to_editStudentDataScreen,
                     bundle
@@ -81,8 +86,7 @@ class StudentDetailsScreen : Fragment(), OnMapReadyCallback {
 
     private fun setUpStudentMap() {
         // Initialize the map
-        val mapFragment =
-            childFragmentManager.findFragmentById(R.id.student_map_fragment) as? SupportMapFragment
+        val mapFragment = childFragmentManager.findFragmentById(R.id.student_map_fragment) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
     }
 
@@ -134,7 +138,8 @@ class StudentDetailsScreen : Fragment(), OnMapReadyCallback {
                     sdZipTxt.text = studentData?.studentZip
                     latitude = studentData?.latitude
                     longitude = studentData?.longitude
-                    Log.e("student data by id", "getStudentData: $it data of $studentData")
+                    studentImage = studentData?.studentImage
+                    Log.e(TAG, "getStudentData: $it data of $studentData")
                     setUpStudentMap()
                 }
             }
@@ -151,7 +156,10 @@ class StudentDetailsScreen : Fragment(), OnMapReadyCallback {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15f))
         } else {
             // Handle the case where latitude or longitude is null
-            Log.e("MapReady", "Latitude or Longitude is null")
+            Log.e(TAG, "Latitude or Longitude is null")
         }
+    }
+    companion object{
+        const val TAG = "StudentDetailsScreen"
     }
 }

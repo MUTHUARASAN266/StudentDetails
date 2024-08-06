@@ -15,6 +15,7 @@
     <string name="welcome_txt">Welcome to \n Student Database App</string>
     <string name="prompt_user_name">User Name</string>
     <string name="prompt_Phone">Phone no</string>
+    <string name="prompt_email">Email</string>
     <string name="prompt_confirm_password">password</string>
     <string name="prompt_password">Password</string>
     <string name="sign_in">SIGN IN</string>

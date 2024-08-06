@@ -1,21 +1,16 @@
 package com.studentdetails.ui
 
-import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
-import android.content.Context
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Base64
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +20,7 @@ import android.widget.RadioButton
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -35,18 +31,16 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.storage.FirebaseStorage
 import com.studentdetails.R
+import com.studentdetails.Utils
+import com.studentdetails.databinding.FragmentAddStudentScreenBinding
 import com.studentdetails.model.StudentData
 import com.studentdetails.repositry.StudentRepository
 import com.studentdetails.viewmodel.StudentViewModel
 import com.studentdetails.viewmodel.StudentViewModelFactory
-import com.studentdetails.Utils
-import com.studentdetails.databinding.FragmentAddStudentScreenBinding
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
+import java.util.Calendar
 import java.util.Locale
 import java.util.UUID
 
@@ -86,6 +80,7 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
 
         checkLocationPermission()
         setUpStudentMap()
+        dobDatePicker()
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
@@ -108,6 +103,31 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
 
 
         }
+    }
+
+    private fun dobDatePicker() {
+        binding.textInputLayoutDob.setEndIconOnClickListener {
+            // Open the date picker dialog
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            val datePickerDialog = DatePickerDialog(
+                requireContext(),
+                { _, selectedYear, selectedMonth, selectedDay ->
+                    // Format the selected date and set it to the EditText
+                    val selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+                    binding.edDob.setText(selectedDate)
+                },
+                year,
+                month,
+                day
+            )
+
+            datePickerDialog.show()
+        }
+
     }
 
     private fun clearText() {
@@ -164,7 +184,10 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
 
                     binding.btnSetlocation.setOnClickListener {
                         getAddressFromLocation(location.latitude, location.longitude)
-                        Log.e("TAG_location", "getAddressFromLocation")
+                        Log.e(
+                            TAG,
+                            "getAddressFromLocation : ${location.latitude} ${location.longitude}"
+                        )
                     }
                 }
             }
@@ -188,9 +211,7 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
 
     private fun setUpStudentMap() {
         // Initialize the map
-        val mapFragment =
-            childFragmentManager.findFragmentById(R.id.student_map_fragment) as? SupportMapFragment
-//        val mapFragmeqwnt = childFragmentManager.findFragmentById(R.id.add_layout_student_map)
+        val mapFragment = childFragmentManager.findFragmentById(R.id.student_map_fragment) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
     }
 
@@ -377,7 +398,7 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
 
 
             Log.e(
-                "TAG student data",
+                TAG,
                 "student data: $studentName $studentSchoolName $studentDob $studentBloodGroup" +
                         "$studentMotherName $studentParentContactNumber $studentAddress $studentCity"
                         + "$studentState $studentZip $studentEmergencyContactNumber $studentGender ${spinnerData()}"
@@ -424,7 +445,7 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
                         R.color.white,
                         Snackbar.LENGTH_SHORT
                     )
-                    Log.e("TAG", "validation: Student data saved successfully")
+                    Log.e(TAG, "validation: Student data saved successfully")
                 }
             }
 
@@ -432,21 +453,6 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
         }
     }
 
-    private fun uploadImageToDatabase() {
-        imageUri?.let { uri ->
-            val fileReference = FirebaseStorage.getInstance().reference
-                .child("student_images/${UUID.randomUUID()}.jpg")
-
-            fileReference.putFile(uri).addOnSuccessListener {
-                fileReference.downloadUrl.addOnSuccessListener { downloadUrl ->
-                    studentImage = downloadUrl.toString()
-                    Log.e("studentImage", "uploadImageToDatabase: $studentImage")
-                }
-            }.addOnFailureListener {
-
-            }
-        }
-    }
     private fun uploadImageToDatabase(
         studentName: String,
         spinnerData: String,
@@ -539,55 +545,12 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
             R.color.white,
             Snackbar.LENGTH_SHORT
         )
-        Log.e("studentData", "storeDataInFirebase: $studentData")
+        Log.e(TAG, "storeDataInFirebase: $studentData")
         clearText()
         findNavController().navigate(R.id.action_addStudentScreen_to_studentDashboard)
         binding.progressCircular.visibility = View.GONE
     }
 
-
-    private fun storeDataInFirebase(
-        studentName: String,
-        spinnerData: String,
-        studentSchoolName: String,
-        studentGender: String?,
-        studentDob: String,
-        studentBloodGroup: String,
-        studentFatherName: String,
-        studentMotherName: String,
-        studentParentContactNumber: String,
-        studentAddress: String,
-        studentCity: String,
-        studentState: String,
-        studentZip: String,
-        studentEmergencyContactNumber: String
-    ) {
-        val studentData = StudentData(
-
-            studentName = studentName,
-            studentClassAndStudentSection = spinnerData,
-            studentSchoolName = studentSchoolName,
-            studentGender = studentGender,
-            studentDob = studentDob,
-            studentBloodGroup = studentBloodGroup,
-            studentFatherName = studentFatherName,
-            studentMotherName = studentMotherName,
-            studentParentContactNumber = studentParentContactNumber,
-            studentAddress = studentAddress,
-            studentCity = studentCity,
-            studentState = studentState,
-            studentZip = studentZip,
-            studentEmergencyContactNumber = studentEmergencyContactNumber,
-            studentImage = studentImage,
-            latitude = latitude,
-            longitude = longitude,
-        )
-        studentViewModel.addStudent(studentData)
-        Log.e("studentData", "storeDataInFirebase: $studentData")
-        clearText()
-        findNavController().navigate(R.id.action_addStudentScreen_to_studentDashboard)
-        binding.progressCircular.visibility = View.GONE
-    }
 
     private fun showMessage(message: String) {
         Utils.showSnackbar(binding.root, message, R.color.white, Snackbar.LENGTH_SHORT)
@@ -596,6 +559,10 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         getCurrentLocation()
+    }
+
+    companion object {
+        const val TAG = "AddStudentScreen"
     }
 
 }

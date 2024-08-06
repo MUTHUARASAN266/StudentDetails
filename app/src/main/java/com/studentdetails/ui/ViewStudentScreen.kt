@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.studentdetails.OnItemClickListener
 import com.studentdetails.R
@@ -46,7 +47,13 @@ class ViewStudentScreen : Fragment(), OnItemClickListener {
         binding.recyclerview.adapter = studentAdapter
 
         binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigateUp()
+            //   findNavController().navigateUp()
+            val navOptions = NavOptions.Builder()
+                .setPopUpTo(R.id.studentDashboard, inclusive = true)
+                .build()
+
+            findNavController().navigate(R.id.action_viewStudentScreen_to_studentDashboard, null, navOptions)
+
         }
         studentViewModel.items.observe(viewLifecycleOwner) { items ->
             studentAdapter.updateData(items)
@@ -57,7 +64,10 @@ class ViewStudentScreen : Fragment(), OnItemClickListener {
     override fun onItemClick(data: StudentData) {
         val bundle = Bundle()
         bundle.putString("studentId", data.studentId.toString())
-        Log.e("TAG_ViewStudentScreen", "onItemClick: studentId ${data.studentId}")
+        Log.e(TAG, "onItemClick: studentId ${data.studentId}")
         findNavController().navigate(R.id.action_viewStudentScreen_to_studentDetails,bundle)
+    }
+    companion object{
+        const val TAG = "ViewStudentScreen"
     }
 }

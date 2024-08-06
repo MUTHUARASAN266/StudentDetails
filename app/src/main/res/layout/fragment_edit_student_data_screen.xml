@@ -185,6 +185,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/text_input_layout_ed_dob"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp56"
                 android:layout_margin="@dimen/dp5"
@@ -195,6 +196,11 @@
                 app:boxStrokeWidth="1dp"
                 app:boxStrokeWidthFocused="1dp"
                 app:expandedHintEnabled="true"
+                app:endIconDrawable="@drawable/calendar"
+                app:endIconCheckable="true"
+                app:endIconMode="custom"
+                app:endIconTint="@color/colorAccent"
+                app:endIconScaleType="center"
                 app:hintAnimationEnabled="true"
                 app:hintEnabled="true"
                 app:hintTextColor="@color/colorAccent">
@@ -388,7 +394,18 @@
                     android:textCursorDrawable="@null" />
 
             </com.google.android.material.textfield.TextInputLayout>
-
+            <ProgressBar
+                android:id="@+id/progress_circular"
+                style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/colorPrimary"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp56"

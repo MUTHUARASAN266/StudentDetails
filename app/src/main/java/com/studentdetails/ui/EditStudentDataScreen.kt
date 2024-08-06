@@ -1,16 +1,14 @@
 package com.studentdetails.ui
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Base64
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,29 +17,39 @@ import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.storage.FirebaseStorage
 import com.studentdetails.R
+import com.studentdetails.Utils
+import com.studentdetails.databinding.FragmentEditStudentDataScreenBinding
 import com.studentdetails.model.StudentData
 import com.studentdetails.repositry.StudentRepository
 import com.studentdetails.viewmodel.StudentViewModel
 import com.studentdetails.viewmodel.StudentViewModelFactory
-import com.studentdetails.Utils
-import com.studentdetails.databinding.FragmentEditStudentDataScreenBinding
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
+import java.util.Calendar
+import java.util.UUID
 
 class EditStudentDataScreen : Fragment() {
     lateinit var binding: FragmentEditStudentDataScreenBinding
     private var studentId: String? = null
+    private var latitude: Double? = null
+    private var longitude: Double? = null
+    private var studentImage: String? = null
     private var studentGender: String? = null
-    private var studentimage: String? = null
+    private var imageUri: Uri? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             studentId = it.getString("update_studentId")
-            Log.e("EditStudentDataScreen_TAG_studentId1", "studentId: $it")
+            studentImage = it.getString("update_studentImage")
+            latitude = it.getDouble("update_latitude")
+            longitude = it.getDouble("update_longitude")
+            Log.e(TAG, "studentId: $it")
 
         }
     }
@@ -64,12 +72,23 @@ class EditStudentDataScreen : Fragment() {
 
         binding.apply {
             toolbar.setNavigationOnClickListener {
-                findNavController().navigateUp()
+                //   findNavController().navigateUp()
+                val navOptions = NavOptions.Builder()
+                    .setPopUpTo(R.id.viewStudentScreen, inclusive = true)
+                    .build()
+
+                findNavController().navigate(
+                    R.id.action_editStudentDataScreen_to_viewStudentScreen,
+                    null,
+                    navOptions
+                )
+
             }
 
             setupSpinner()
+            dobDatePicker()
             setData()
-            Log.e("EditStudentDataScreen_TAG_studentId1", "studentId: $studentId")
+            Log.e(TAG, "studentId: $studentId")
             btnUpdate.setOnClickListener {
                 validation()
 
@@ -84,6 +103,31 @@ class EditStudentDataScreen : Fragment() {
                 }
             }
         }
+    }
+
+    private fun dobDatePicker() {
+        binding.textInputLayoutEdDob.setEndIconOnClickListener {
+            // Open the date picker dialog
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            val datePickerDialog = DatePickerDialog(
+                requireContext(),
+                { _, selectedYear, selectedMonth, selectedDay ->
+                    // Format the selected date and set it to the EditText
+                    val selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+                    binding.editDob.setText(selectedDate)
+                },
+                year,
+                month,
+                day
+            )
+
+            datePickerDialog.show()
+        }
+
     }
 
     private fun setData() {
@@ -102,6 +146,10 @@ class EditStudentDataScreen : Fragment() {
                     editState.setText(studentData?.studentState)
                     editZip.setText(studentData?.studentZip)
                     editEmergencyNumber.setText(studentData?.studentEmergencyContactNumber)
+                    Glide.with(binding.root.context)
+                        .load(studentData?.studentImage)
+                        .placeholder(R.drawable.student)
+                        .into(binding.editStudentProfileImage)
                 }
             }
         }
@@ -109,21 +157,51 @@ class EditStudentDataScreen : Fragment() {
 
     private fun checkPermissionAndPickImage() {
         when {
-            ContextCompat.checkSelfPermission(
-                requireContext(),
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
+                // Android 13 (API level 33) and above
+                when {
+                    ContextCompat.checkSelfPermission(
+                        requireContext(),
+                        android.Manifest.permission.READ_MEDIA_IMAGES
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        openImagePicker()
+                    }
 
-                android.Manifest.permission.READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                openImagePicker()
+                    shouldShowRequestPermissionRationale(android.Manifest.permission.READ_MEDIA_IMAGES) -> {
+                        showMessage("Media access is required to pick an image.")
+                        requestPermissionLauncher.launch(android.Manifest.permission.READ_MEDIA_IMAGES)
+                    }
+
+                    else -> {
+                        requestPermissionLauncher.launch(android.Manifest.permission.READ_MEDIA_IMAGES)
+                    }
+                }
             }
 
-            shouldShowRequestPermissionRationale(android.Manifest.permission.READ_EXTERNAL_STORAGE) -> {
-                showMessage("Storage access is required to pick an image.")
-                requestPermissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
+                // Android 10 (API level 29) to 12 (API level 31)
+                when {
+                    ContextCompat.checkSelfPermission(
+                        requireContext(),
+                        android.Manifest.permission.READ_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        openImagePicker()
+                    }
+
+                    shouldShowRequestPermissionRationale(android.Manifest.permission.READ_EXTERNAL_STORAGE) -> {
+                        showMessage("Storage access is required to pick an image.")
+                        requestPermissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                    }
+
+                    else -> {
+                        requestPermissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                    }
+                }
             }
 
             else -> {
-                requestPermissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                // For Android 9 (API level 28) and below, no special permissions needed
+                openImagePicker()
             }
         }
     }
@@ -133,20 +211,6 @@ class EditStudentDataScreen : Fragment() {
         pickImage.launch(intent)
     }
 
-    private fun handleImageUri(uri: Uri) {
-        val inputStream: InputStream? = requireContext().contentResolver.openInputStream(uri)
-        val bitmap = BitmapFactory.decodeStream(inputStream)
-        val base64Image = encodeImageToBase64(bitmap)
-//        saveImageToDatabase(base64Image)
-        studentimage = base64Image
-    }
-
-    private fun encodeImageToBase64(bitmap: Bitmap): String {
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
-        val byteArray: ByteArray = byteArrayOutputStream.toByteArray()
-        return Base64.encodeToString(byteArray, Base64.DEFAULT)
-    }
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -163,7 +227,7 @@ class EditStudentDataScreen : Fragment() {
                 val data: Intent? = result.data
                 data?.data?.let { uri ->
                     binding.editStudentProfileImage.setImageURI(uri)
-                    handleImageUri(uri)
+                    imageUri = uri
                 }
             }
         }
@@ -258,7 +322,7 @@ class EditStudentDataScreen : Fragment() {
 
 
             Log.e(
-                "TAG student data",
+                TAG,
                 "student data: $studentName $studentSchoolName $studentDob $studentBloodGroup" +
                         "$studentMotherName $studentParentContactNumber $studentAddress $studentCity"
                         + "$studentState $studentZip $studentEmergencyContactNumber $studentGender ${spinnerData()}"
@@ -281,7 +345,7 @@ class EditStudentDataScreen : Fragment() {
 
 
                 else -> {
-                    storeDataInFirebase(
+                    uploadImageToDatabase(
                         studentName,
                         spinnerData(),
                         studentSchoolName,
@@ -297,11 +361,61 @@ class EditStudentDataScreen : Fragment() {
                         studentZip,
                         studentEmergencyContactNumber,
                     )
-                    Log.e("TAG", "validation: Student data saved successfully")
+                    binding.progressCircular.visibility = View.VISIBLE
+                    Log.e(TAG, "validation: Student data saved successfully")
                 }
             }
 
 
+        }
+    }
+
+    private fun uploadImageToDatabase(
+        studentName: String,
+        spinnerData: String,
+        studentSchoolName: String,
+        studentGender: String?,
+        studentDob: String,
+        studentBloodGroup: String,
+        studentFatherName: String,
+        studentMotherName: String,
+        studentParentContactNumber: String,
+        studentAddress: String,
+        studentCity: String,
+        studentState: String,
+        studentZip: String,
+        studentEmergencyContactNumber: String
+    ) {
+        imageUri?.let { uri ->
+            val fileReference = FirebaseStorage.getInstance().reference
+                .child("student_images/${UUID.randomUUID()}.jpg")
+
+            fileReference.putFile(uri).addOnSuccessListener {
+                fileReference.downloadUrl.addOnSuccessListener { downloadUrl ->
+                    studentImage = downloadUrl.toString()
+                    storeDataInFirebase(
+                        studentName,
+                        spinnerData,
+                        studentSchoolName,
+                        studentGender,
+                        studentDob,
+                        studentBloodGroup,
+                        studentFatherName,
+                        studentMotherName,
+                        studentParentContactNumber,
+                        studentAddress,
+                        studentCity,
+                        studentState,
+                        studentZip,
+                        studentEmergencyContactNumber,
+                        studentImage
+                    )
+                }
+            }.addOnFailureListener {
+                showMessage("Failed to upload image")
+            }
+        } ?: run {
+            showMessage("Image not selected")
         }
     }
 
@@ -319,7 +433,8 @@ class EditStudentDataScreen : Fragment() {
         studentCity: String,
         studentState: String,
         studentZip: String,
-        studentEmergencyContactNumber: String
+        studentEmergencyContactNumber: String,
+        studentImage: String?
     ) {
         val studentData = StudentData(
             studentId = studentId,
@@ -337,15 +452,21 @@ class EditStudentDataScreen : Fragment() {
             studentState = studentState,
             studentZip = studentZip,
             studentEmergencyContactNumber = studentEmergencyContactNumber,
-            studentImage = studentimage
+            studentImage = studentImage,
+            latitude = latitude,
+            longitude = longitude
         )
         studentId?.let {
             studentViewModel.updateUser(it, studentData) { isSuccessful ->
                 if (isSuccessful) {
                     showMessage("User updated successfully")
                     setData()
-                    Log.e("TAG_studentId", "studentId: $it")
-                    Log.e("EditStudentDataScreen_TAG_studentId", "studentId: $it,studentData: $studentData")
+                    Log.e(TAG, "studentId: $it")
+                    Log.e(
+                        TAG,
+                        "studentId: $it,studentData: $studentData"
+                    )
+                    binding.progressCircular.visibility = View.GONE
                     findNavController().navigate(R.id.action_editStudentDataScreen_to_viewStudentScreen)
                 } else {
                     showMessage("Failed to update user")
@@ -358,5 +479,7 @@ class EditStudentDataScreen : Fragment() {
         Utils.showSnackbar(binding.root, message, R.color.white, Snackbar.LENGTH_SHORT)
     }
 
-
+    companion object {
+        const val TAG = "EditStudentDataScreen"
+    }
 }
