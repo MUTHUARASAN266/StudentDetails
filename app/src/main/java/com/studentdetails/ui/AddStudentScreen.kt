@@ -55,7 +55,7 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
     private var longitude: Double? = null
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
 
-    //    private val studentViewModel: StudentViewModel by viewModels()
+    //    private val studentViewModel: com.studentdetails.viewmodel.StudentViewModel by viewModels()
     private val studentViewModel: StudentViewModel by viewModels {
         StudentViewModelFactory(StudentRepository())
     }

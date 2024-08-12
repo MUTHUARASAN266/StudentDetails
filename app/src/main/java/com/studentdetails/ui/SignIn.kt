@@ -21,6 +21,13 @@ import com.studentdetails.databinding.FragmentSignInBinding
 import com.studentdetails.repositry.StudentRepository
 import com.studentdetails.viewmodel.StudentViewModel
 import com.studentdetails.viewmodel.StudentViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SignIn : Fragment() {
     private lateinit var binding: FragmentSignInBinding
@@ -65,7 +72,6 @@ class SignIn : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             requireActivity().finishAffinity()
         }
-
     }
 
     private fun validation() {
@@ -76,10 +82,11 @@ class SignIn : Fragment() {
                 userName.isEmpty() -> showError("Username is empty")
                 password.isEmpty() -> showError("password is empty")
                 else -> {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        progressCircular.visibility = View.VISIBLE
+                    }
                     studentViewModel.login(userName, password)
-                    binding.progressCircular.visibility = View.VISIBLE
                     userAuth()
-                    saveLoginState()
                     clearText()
                 }
 
@@ -94,6 +101,7 @@ class SignIn : Fragment() {
             edPassword.text?.clear()
         }
     }
+
     private fun saveLoginState() {
         val editor = sharedPreferences.edit()
         editor.putBoolean("isLoggedIn", true)
@@ -101,7 +109,7 @@ class SignIn : Fragment() {
     }
 
     private fun userAuth() {
-        studentViewModel.loginStatus.observe(requireActivity()) { success ->
+        studentViewModel.loginStatus.observe(viewLifecycleOwner) { success ->
             if (success) {
                 Utils.showSnackbar(
                     binding.root,
@@ -109,13 +117,14 @@ class SignIn : Fragment() {
                     R.color.white,
                     Snackbar.LENGTH_SHORT
                 )
-                Log.e(TAG, "userAuth: Login Successful")
                 binding.progressCircular.visibility = View.GONE
+                Log.e(TAG, "userAuth: Login Successful")
+                saveLoginState()
                 startActivity(Intent(requireActivity(), DashboardScreen::class.java))
             }
         }
 
-        studentViewModel.errorMessage.observe(requireActivity(), Observer { message ->
+        studentViewModel.errorMessage.observe(viewLifecycleOwner, Observer { message ->
             binding.progressCircular.visibility = View.GONE
             message?.let {
                 Utils.showSnackbar(binding.root, it, R.color.white, Snackbar.LENGTH_SHORT)

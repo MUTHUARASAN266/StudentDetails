@@ -65,9 +65,16 @@ dependencies {
     // for google map
     implementation ("com.google.android.gms:play-services-maps:18.0.0")
 
-    // for viewmodel
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
-    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
+    // Lifecycle + ViewModel & LiveData
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0-alpha05")
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.5.0-alpha05")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0-alpha05")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.0-alpha05")
+
+    // coroutines
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
+    implementation ("com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2")
 
     // glide
     implementation (libs.glide)
