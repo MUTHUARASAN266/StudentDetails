@@ -3,9 +3,8 @@ package com.studentdetails.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.studentdetails.OnItemClickListener
-import com.studentdetails.R
+import com.studentdetails.Utils.loadImage
 import com.studentdetails.databinding.StudentListBinding
 import com.studentdetails.model.StudentData
 
@@ -18,11 +17,7 @@ class StudentAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(data: StudentData) {
 
-            Glide.with(binding.root.context)
-                .load(data.studentImage)
-                .placeholder(R.drawable.student)
-                .into(binding.studentImage)
-
+            binding.studentImage.loadImage(data.studentImage)
             binding.studentNameText.text = data.studentName
             binding.studentSchoolText.text = data.studentSchoolName
             binding.btnStudentViewData.setOnClickListener {

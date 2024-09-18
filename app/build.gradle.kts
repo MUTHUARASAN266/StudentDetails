@@ -59,22 +59,22 @@ dependencies {
     implementation(libs.play.services.location)
 
     // for navigation fragment
-    implementation ("androidx.navigation:navigation-fragment-ktx:2.6.0")
-    implementation ("androidx.navigation:navigation-ui-ktx:2.6.0")
+    implementation (libs.androidx.navigation.fragment.ktx)
+    implementation (libs.androidx.navigation.ui.ktx)
 
     // for google map
-    implementation ("com.google.android.gms:play-services-maps:18.0.0")
+    implementation (libs.play.services.maps)
 
     // Lifecycle + ViewModel & LiveData
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0-alpha05")
-    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.5.0-alpha05")
-    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.5.0-alpha05")
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.0-alpha05")
+    implementation (libs.androidx.lifecycle.viewmodel.ktx)
+    implementation (libs.androidx.lifecycle.livedata.ktx)
+    implementation (libs.androidx.lifecycle.runtime.ktx)
+    implementation (libs.androidx.lifecycle.viewmodel.savedstate)
 
     // coroutines
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
-    implementation ("com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2")
+    implementation (libs.kotlinx.coroutines.android)
+    implementation (libs.kotlinx.coroutines.core)
+    implementation (libs.retrofit2.kotlin.coroutines.adapter)
 
     // glide
     implementation (libs.glide)

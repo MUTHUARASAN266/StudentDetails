@@ -30,6 +30,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.storage.FirebaseStorage
@@ -53,6 +54,7 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private var latitude: Double? = null
     private var longitude: Double? = null
+    private var currentMarker: Marker? = null
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
 
     //    private val studentViewModel: com.studentdetails.viewmodel.StudentViewModel by viewModels()
@@ -88,10 +90,8 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
             setupSpinner()
             btnSubmite.setOnClickListener {
                 validation()
-
             }
             btnImage.setOnClickListener {
-
                 checkPermissionAndPickImage()
             }
             radioGroup.setOnCheckedChangeListener { group, checkedId ->
@@ -175,23 +175,34 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
         ) {
 
             fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                currentMarker?.remove()
                 if (location != null) {
                     val latLng = LatLng(location.latitude, location.longitude)
-                    latitude = location.latitude
-                    longitude = location.longitude
-                    mMap.addMarker(MarkerOptions().position(latLng).title("You are here"))
+                    // latitude = location.latitude
+                    // longitude = location.longitude
+                    mMap.isMyLocationEnabled = true
+                    currentMarker = mMap.addMarker(MarkerOptions().position(latLng).title("You are here"))
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
 
-                    binding.btnSetlocation.setOnClickListener {
-                        getAddressFromLocation(location.latitude, location.longitude)
-                        Log.e(
-                            TAG,
-                            "getAddressFromLocation : ${location.latitude} ${location.longitude}"
-                        )
-                    }
+                    studentLocationGetting(mMap) // set student location function
                 }
             }
         }
+    }
+
+    private fun studentLocationGetting(googleMap: GoogleMap) {
+
+        googleMap.setOnMapClickListener { latLang ->
+            currentMarker?.remove()
+            currentMarker = mMap.addMarker(MarkerOptions().position(latLang).title("You are here"))
+            binding.btnSetlocation.setOnClickListener {
+                latitude = latLang.latitude
+                longitude = latLang.longitude
+                getAddressFromLocation(latLang.latitude, latLang.longitude)
+                Log.e(TAG, "studentLocationGetting: latitude: $latitude longitude:$longitude")
+            }
+        }
+
     }
 
     private fun getAddressFromLocation(latitude: Double, longitude: Double) {
@@ -439,12 +450,7 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
                         studentZip,
                         studentEmergencyContactNumber,
                     )
-                    Utils.showSnackbar(
-                        binding.root,
-                        "wait few second your data storing to database",
-                        R.color.white,
-                        Snackbar.LENGTH_SHORT
-                    )
+                    showMessage("wait few second your data storing to database")
                     Log.e(TAG, "validation: Student data saved successfully")
                 }
             }
@@ -539,12 +545,7 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
             longitude = longitude
         )
         studentViewModel.addStudent(studentData)
-        Utils.showSnackbar(
-            binding.root,
-            "Student data saved successfully",
-            R.color.white,
-            Snackbar.LENGTH_SHORT
-        )
+        showMessage("Student data saved successfully")
         Log.e(TAG, "storeDataInFirebase: $studentData")
         clearText()
         findNavController().navigate(R.id.action_addStudentScreen_to_studentDashboard)
@@ -558,6 +559,8 @@ class AddStudentScreen : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        googleMap.uiSettings.isZoomControlsEnabled = true // zoom in
+        googleMap.uiSettings.isZoomGesturesEnabled = true // zoom out
         getCurrentLocation()
     }
 

@@ -26,6 +26,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.storage.FirebaseStorage
 import com.studentdetails.R
 import com.studentdetails.Utils
+import com.studentdetails.Utils.loadImage
 import com.studentdetails.databinding.FragmentEditStudentDataScreenBinding
 import com.studentdetails.model.StudentData
 import com.studentdetails.repositry.StudentRepository
@@ -146,10 +147,7 @@ class EditStudentDataScreen : Fragment() {
                     editState.setText(studentData?.studentState)
                     editZip.setText(studentData?.studentZip)
                     editEmergencyNumber.setText(studentData?.studentEmergencyContactNumber)
-                    Glide.with(binding.root.context)
-                        .load(studentData?.studentImage)
-                        .placeholder(R.drawable.student)
-                        .into(binding.editStudentProfileImage)
+                    binding.editStudentProfileImage.loadImage(studentData?.studentImage)
                 }
             }
         }
@@ -345,6 +343,7 @@ class EditStudentDataScreen : Fragment() {
 
 
                 else -> {
+                    binding.progressCircular.visibility = View.VISIBLE
                     uploadImageToDatabase(
                         studentName,
                         spinnerData(),
@@ -361,7 +360,6 @@ class EditStudentDataScreen : Fragment() {
                         studentZip,
                         studentEmergencyContactNumber,
                     )
-                    binding.progressCircular.visibility = View.VISIBLE
                     Log.e(TAG, "validation: Student data saved successfully")
                 }
             }
@@ -412,9 +410,11 @@ class EditStudentDataScreen : Fragment() {
                     )
                 }
             }.addOnFailureListener {
+                binding.progressCircular.visibility = View.GONE
                 showMessage("Failed to upload image")
             }
         } ?: run {
+            binding.progressCircular.visibility = View.GONE
             showMessage("Image not selected")
         }
     }
@@ -469,6 +469,7 @@ class EditStudentDataScreen : Fragment() {
                     binding.progressCircular.visibility = View.GONE
                     findNavController().navigate(R.id.action_editStudentDataScreen_to_viewStudentScreen)
                 } else {
+                    binding.progressCircular.visibility = View.GONE
                     showMessage("Failed to update user")
                 }
             }

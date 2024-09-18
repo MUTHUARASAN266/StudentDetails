@@ -6,8 +6,10 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Shader
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 
 object Utils {
@@ -49,6 +51,12 @@ object Utils {
         // Cleanup
         scaledBitmap.recycle()
         return output
+    }
+    fun ImageView.loadImage(url: String?) {
+        Glide.with(this.context)
+            .load(url)
+            .placeholder(R.drawable.student)
+            .into(this)
     }
 
 }
